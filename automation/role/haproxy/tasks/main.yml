@@ -1,0 +1,21 @@
+---
+# tasks file for haproxy
+- name: HAPROXY PACKAGE DOWNLOAD
+  package:
+    name:
+      - haproxy
+    state: present
+
+- name: AAA
+  debug:
+    var: "{{ hostvars[groups['ec2_server'][0]] }}"
+
+- name: COPYING THE CONFIG FILE OF HAPROXY
+  template:
+    src: "haproxy.cfg"
+    dest: "/etc/haproxy/haproxy.cfg"
+
+- name: STARTING SERVICE
+  service:
+    name: "haproxy"
+    state: restarted

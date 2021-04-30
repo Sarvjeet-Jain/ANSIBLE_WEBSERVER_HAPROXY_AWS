@@ -1,0 +1,48 @@
+---
+# tasks file for ec2-instance
+
+- name: LAUNCHING EC2-INSTANCE USING LOOP
+  ec2:
+    key_name: "{{ key_pair }}"
+    instance_type: "{{ inst_flav }}"
+    image: "{{ ami }}"
+    wait: true
+    group_id: "sg-081a57cacc768707d"
+    count: 1
+    vpc_subnet_id: "{{ subnet }}"
+    assign_public_ip: yes
+    region: "{{ reg_name }}"
+    state: present
+    instance_tags:
+      Name: "{{ item }}"
+    aws_access_key: "{{ access_key }}"
+    aws_secret_key: "{{ secret_key }}"
+  register: instance
+  loop: "{{ inst_tag }}"
+
+- name: ADDING HOST OF HAPROXY
+  add_host:
+    hostname: "{{ instance.results[0].instances[0].public_ip }}"
+    groupname: ec2_haproxy
+
+- name: ADDING HOST OF SERVER
+  add_host:
+    hostname: "{{ instance.results[1].instances[0].public_ip }}"
+    groupname: ec2_server
+
+- name: ADDING HOST OF SERVER
+  add_host:
+    hostname: "{{ instance.results[2].instances[0].public_ip }}"
+    groupname: ec2_server
+
+- name: AAA
+  debug: 
+    var: "{{ hostvars[groups['ec2_server'][0]]['inventory_hostname'] }}"
+
+
+- name: WAIT FOR SSH
+  wait_for:
+    host: "{{ instance.results[2].instances[0].public_dns_name }}"
+    port: 22
+    state: started
+

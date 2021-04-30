@@ -1,0 +1,14 @@
+---
+# vars file for ec2-instance
+inst_tag:
+        - haproxy
+        - webserver1
+        - webserver2
+
+reg_name: ap-south-1
+subnet: subnet-40bab028
+ami: ami-0bcf5425cdc1d8a85
+key_pair: task19
+inst_flav: t2.micro
+
+
