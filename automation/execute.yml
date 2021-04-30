@@ -10,14 +10,14 @@
 - hosts: ec2_haproxy
   gather_facts: no
   tasks:
-    - name: Running K8s Master Role
+    - name: RUNNING HAPROXY
       include_role:
         name: haproxy
 
 - hosts: ec2_server
   gather_facts: no
   tasks:
-    - name: Running K8s Slave Role
+    - name: RUNNING WEBSERVER
       include_role:
         name: webserver
 
